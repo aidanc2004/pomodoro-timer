@@ -1,20 +1,22 @@
 let timer = document.getElementById("timer");
-let cycle = document.getElementById("cycle");
+let showTask = document.getElementById("task");
 let startButton = document.getElementById("start");
+
+let timerSettings = document.getElementsByClassName("timerSetting");
 
 let running = false; // if timer is running
 
 let minutes = 0;
 let seconds = 0;
 
-let numOfCycles = 0; // pomodoro technique cycles
+let numOfCycles = 1; // pomodoro technique cycles
 
-let task = "Break"; // either "Work" or "Break"
+let currentTask = "Work"; // either "Work" or "Break"
+
+let interval;
 
 function updateTimer() {
     seconds++;
-
-    cycle.textContent = `${task} - Cycle: ${numOfCycles}`;
 
     // if a minute has passed, update minutes and seconds
     if (seconds == 60) {
@@ -35,37 +37,47 @@ function updateTimer() {
         minutes++;
     }
 
-    if (minutes == 25 && task == "Work") {
-        task = "Break";
-        seconds = 0;
-        minutes = 0;
+    // work
+    if (minutes == 25 && currentTask == "Work") {
+        clearTimer();
     }
 
-    // if the cycle is a multiple of four, use long break
-    if (numOfCycles % 4 == 0) {
-        // long break;
-        if (minutes == 15 && task == "Rest") {
-            task = "Work"
-            seconds = 0;
-            minutes = 0;
-            numOfCycles++;
-        }
-    } else {
-        // short break
-        if (minutes == 5 && task == "Rest") {
-            task = "Work"
-            seconds = 0;
-            minutes = 0;
-            numOfCycles++;
-        }
+    // long break
+    if (minutes == 15 && currentTask == "Long Break") {
+        clearTimer();
+    }
+
+    // short break
+    if (minutes == 5 && currentTask == "Break") {
+        clearTimer();
     }
 }
 
+// wipe the timer
+function clearTimer() {
+    clearInterval(interval);
+    running = false;
+    minutes = seconds = 0;
+    timer.textContent = "00:00";
+}
+
+// start the timer
 startButton.addEventListener("click", () => {
     // make sure you cant have it going multiple times
     if (running == false) {
-        //numOfCycles = 1;
-        setInterval(updateTimer, 1000);
+        interval = setInterval(updateTimer, 1000);
         running = true;
     }
+    // TODO: pause timer
 })
+
+// setup buttons
+for (let i = 0; i < timerSettings.length; i++) {
+    let button = timerSettings[i];
+
+    button.addEventListener("click", () => {
+        currentTask = button.textContent;
+        showTask.textContent = button.textContent;
+        clearTimer();
+    });
+}
