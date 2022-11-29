@@ -1,6 +1,7 @@
 let timer = document.getElementById("timer");
 let showTask = document.getElementById("task");
 let startButton = document.getElementById("start");
+let cycleButton = document.getElementById("cycle");
 
 let timerSettings = document.getElementsByClassName("timerSetting");
 
@@ -9,11 +10,12 @@ let running = false; // if timer is running
 let minutes = 0;
 let seconds = 0;
 
-let numOfCycles = 1; // pomodoro technique cycles
-
 let currentTask = "Work"; // either "Work" or "Break"
 
 let interval;
+
+let cycleMode = false;
+let numOfCycles = 1;
 
 function updateTimer() {
     seconds++;
@@ -29,7 +31,7 @@ function updateTimer() {
     let secondsString = seconds.toString().padStart(2, "0");
 
     // show new time
-    timer.textContent = `${minutesString}:${secondsString}`
+    timer.textContent = `${minutesString}:${secondsString}`;
 
     // when a minute passes
     if (seconds > 60) {
@@ -37,28 +39,75 @@ function updateTimer() {
         minutes++;
     }
 
-    // work
-    if (minutes == 25 && currentTask == "Work") {
-        clearTimer();
-    }
+    // if the timer is in cycle mode
+    if (cycleMode) {
+        // work
+        if (minutes == 25 && currentTask == "Work") {
+            clearTimer();
 
-    // long break
-    if (minutes == 15 && currentTask == "Long Break") {
-        clearTimer();
-    }
+            // if the cumber of cycles is a multiple of 4, use long break
+            if (numOfCycles % 4 == 0) {
+                currentTask = "Long Break";
+                showTask.textContent = currentTask + " - Cycle";
+            } else {
+                currentTask = "Break";
+                showTask.textContent = currentTask + " - Cycle";
+            }
+        }
 
-    // short break
-    if (minutes == 5 && currentTask == "Break") {
-        clearTimer();
+        // long break
+        if (minutes == 15 && currentTask == "Long Break") {
+            clearTimer();
+        }
+
+        // short break
+        if (minutes == 5 && currentTask == "Break") {
+            clearTimer();
+            currentTask = "Break";
+            showTask.textContent = currentTask + " - Cycle";
+            numOfCycles++;
+        }
+    } else {
+        // work
+        if (minutes == 25 && currentTask == "Work") {
+            stopTimer();
+        }
+
+        // long break
+        if (minutes == 15 && currentTask == "Long Break") {
+            stopTimer();
+        }
+
+        // short break
+        if (minutes == 5 && currentTask == "Break") {
+            stopTimer();
+        }
     }
 }
 
-// wipe the timer
+// starts the cycle
+// work, break, work, break, work, break, work, long break, repeat
+function startCycle() {
+    stopTimer();
+
+    currentTask = "Work";
+    showTask.textContent = currentTask + " - Cycle";
+
+    cycleMode = true;
+    numOfCycles = 1;
+}
+
+// wipe the timer, don't stop the timer
 function clearTimer() {
-    clearInterval(interval);
-    running = false;
     minutes = seconds = 0;
     timer.textContent = "00:00";
+}
+
+// completely stop the timer, clear cycle
+function stopTimer() {
+    clearInterval(interval);
+    running = false;
+    clearTimer();
 }
 
 // start the timer
@@ -76,8 +125,10 @@ for (let i = 0; i < timerSettings.length; i++) {
     let button = timerSettings[i];
 
     button.addEventListener("click", () => {
+        stopTimer();
         currentTask = button.textContent;
         showTask.textContent = button.textContent;
-        clearTimer();
     });
 }
+
+cycleButton.addEventListener("click", startCycle);
