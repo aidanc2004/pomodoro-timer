@@ -16,17 +16,9 @@ function updateTimer() {
         seconds = 0;
     }
 
-    // string representation of numbers
-    let minutesString = minutes.toString();
-    let secondsString = seconds.toString();
-
-    // if numbers are single digit, add an extra zero
-    if (seconds < 10) {
-        secondsString = "0" + secondsString;
-    }
-    if (minutesString < 10) {
-        minutesString = "0" + minutesString;
-    }
+    // string representation of numbers with padding 0
+    let minutesString = minutes.toString().padStart(2, "0");
+    let secondsString = seconds.toString().padStart(2, "0");
 
     // show new time
     timer.textContent = `${minutesString}:${secondsString}`
