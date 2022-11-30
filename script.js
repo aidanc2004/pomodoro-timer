@@ -43,6 +43,7 @@ function updateTimer() {
     if (cycleMode) {
         // work
         if (minutes == 25 && currentTask == "Work") {
+            alert("Timer!");
             haltTimer();
 
             // if the cumber of cycles is a multiple of 4, use long break
@@ -57,11 +58,13 @@ function updateTimer() {
 
         // long break
         if (minutes == 15 && currentTask == "Long Break") {
+            alert("Timer!");
             haltTimer();
         }
 
         // short break
         if (minutes == 5 && currentTask == "Break") {
+            alert("Timer!");
             haltTimer();
             currentTask = "Break";
             showTask.textContent = currentTask + " - Cycle";
@@ -70,16 +73,19 @@ function updateTimer() {
     } else {
         // work
         if (minutes == 25 && currentTask == "Work") {
+            alert("Timer!");
             stopTimer();
         }
 
         // long break
         if (minutes == 15 && currentTask == "Long Break") {
+            alert("Timer!");
             stopTimer();
         }
 
         // short break
         if (minutes == 5 && currentTask == "Break") {
+            alert("Timer!");
             stopTimer();
         }
     }
@@ -110,22 +116,18 @@ function stopTimer() {
     clearTimer();
     cycleMode = false;
     numOfCycles = 1;
-    alert("Timer!");
 }
 
 // halt the timer
 function haltTimer() {
     clearInterval(interval);
     running = false;
-    alert("Timer!");
 }
 
 // start the timer
 startButton.addEventListener("click", () => {
     // make sure you cant have it going multiple times
     if (running == false) {
-        minutes = 4; //fdsafdsadf
-        seconds = 55; //adsfdfsasfds
         interval = setInterval(updateTimer, 1000);
         running = true;
     }
