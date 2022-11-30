@@ -1,4 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
 * {
+    font-family: Roboto;
     font-size: 1.5rem;
     padding: 0;
     margin: 0;
@@ -25,6 +27,7 @@ body {
     font-size: 4rem;
     padding: 2rem;
     padding-bottom: 0;
+    font-weight: 500;
 }
 
 #task {
