@@ -20,6 +20,7 @@ body {
     padding: 1rem;
     text-align: center;
     background-color: #039bc1;
+    border: 5px solid #0084a5;
     border-radius: 5%;
 }
 
