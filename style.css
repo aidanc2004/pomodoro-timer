@@ -13,15 +13,14 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #016593;
+    background-color: #3eb7d6;
 }
 
 #main {
     padding: 1rem;
     text-align: center;
-    background-color: rgba(121, 210, 252, .5);
+    background-color: #039bc1;
     border-radius: 5%;
-
 }
 
 #timer {
