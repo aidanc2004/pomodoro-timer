@@ -14,7 +14,7 @@ let currentTask = "Work"; // either "Work" or "Break"
 
 let interval;
 
-let cycleMode = false; // if timer is in cycle mode
+let isCycleMode = false; // if timer is in cycle mode
 let numOfCycles = 1;   // number of cycles
 
 function updateTimer() {
@@ -40,36 +40,8 @@ function updateTimer() {
     }
 
     // if the timer is in cycle mode
-    if (cycleMode) {
-        // work
-        if (minutes == 25 && currentTask == "Work") {
-            alert("Timer!");
-            haltTimer();
-
-            // if the cumber of cycles is a multiple of 4, use long break
-            if (numOfCycles % 4 == 0) {
-                currentTask = "Long Break";
-                showTask.textContent = currentTask + " - Cycle";
-            } else {
-                currentTask = "Break";
-                showTask.textContent = currentTask + " - Cycle";
-            }
-        }
-
-        // long break
-        if (minutes == 15 && currentTask == "Long Break") {
-            alert("Timer!");
-            haltTimer();
-        }
-
-        // short break
-        if (minutes == 5 && currentTask == "Break") {
-            alert("Timer!");
-            haltTimer();
-            currentTask = "Break";
-            showTask.textContent = currentTask + " - Cycle";
-            numOfCycles++;
-        }
+    if (isCycleMode) {
+        cycleMode();
     } else {
         // work
         if (minutes == 25 && currentTask == "Work") {
@@ -91,6 +63,39 @@ function updateTimer() {
     }
 }
 
+// when timer is in cycle mode
+function cycleMode() {
+    // work
+    if (minutes == 25 && currentTask == "Work") {
+        alert("Timer!");
+        haltTimer();
+
+        // if the cumber of cycles is a multiple of 4, use long break
+        if (numOfCycles % 4 == 0) {
+            currentTask = "Long Break";
+            showTask.textContent = currentTask + " - Cycle";
+        } else {
+            currentTask = "Break";
+            showTask.textContent = currentTask + " - Cycle";
+        }
+    }
+
+    // long break
+    if (minutes == 15 && currentTask == "Long Break") {
+        alert("Timer!");
+        haltTimer();
+    }
+
+    // short break
+    if (minutes == 5 && currentTask == "Break") {
+        alert("Timer!");
+        haltTimer();
+        currentTask = "Break";
+        showTask.textContent = currentTask + " - Cycle";
+        numOfCycles++;
+    }
+}
+
 // starts the cycle
 // work, break, work, break, work, break, work, long break, repeat
 function startCycle() {
@@ -99,26 +104,26 @@ function startCycle() {
     currentTask = "Work";
     showTask.textContent = currentTask + " - Cycle";
 
-    cycleMode = true;
+    isCycleMode = true;
     numOfCycles = 1;
 }
 
-// wipe the timer, don't stop the timer
+// wipe the timer, but don't stop (for cycle mode)
 function clearTimer() {
     minutes = seconds = 0;
     timer.textContent = "00:00";
 }
 
-// completely stop the timer, clear cycle, alert user
+// completely stop the timer, clear cycle, and alert user
 function stopTimer() {
     clearInterval(interval);
     running = false;
     clearTimer();
-    cycleMode = false;
+    isCycleMode = false;
     numOfCycles = 1;
 }
 
-// halt the timer
+// halt the timer (dont clear)
 function haltTimer() {
     clearInterval(interval);
     running = false;
@@ -145,4 +150,5 @@ for (let i = 0; i < timerSettings.length; i++) {
     });
 }
 
+// setup cycle button
 cycleButton.addEventListener("click", startCycle);
